@@ -7,15 +7,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.text.Normalizer;
 import java.util.List;
 
+import static java.util.Arrays.stream;
+
 @RequiredArgsConstructor
 @Service
 public class EnderecoService {
-
-    private final RestTemplate restTemplate = new RestTemplate();
 
     public ResponseEntity<?> consultaEndereco(String cep) {
         cep = cep.replaceAll("\\D", "");
@@ -27,7 +28,11 @@ public class EnderecoService {
 
             String url = "https://viacep.com.br/ws/" + cep + "/json/";
 
-            EnderecoResponse response = restTemplate.getForObject(url, EnderecoResponse.class);
+            EnderecoResponse response = WebClient.create(url)
+                    .get()
+                    .retrieve()
+                    .bodyToMono(EnderecoResponse.class)
+                    .block();
 
             if(response.cep() == null) {
                 return ResponseEntity.ok("Cep não encontrado");
@@ -55,7 +60,11 @@ public class EnderecoService {
 
             String url = "https://viacep.com.br/ws/" + uf + "/" + cidade + "/" + nomeDaRua + "/json/";
 
-            List<EnderecoResponse> response = restTemplate.getForObject(url, List.class);
+           List<EnderecoResponse> response = WebClient.create(url)
+                   .get()
+                   .retrieve()
+                   .bodyToMono(List.class)
+                   .block();
 
             if (response.isEmpty()) {
                 return ResponseEntity.ok("Endereço não encontrado");

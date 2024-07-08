@@ -1,6 +1,6 @@
-# Consumindo API ViaCep - Spring, RestTemplate e Maven
+# Consumindo API ViaCep - Spring, WebClient e Maven
 
-Este serviço é uma integração com a API da ViaCep usando o Spring, RestTemplate e Maven.
+Este serviço é uma integração com a API da ViaCep usando o Spring, WebClient e Maven.
 
 O serviço conta com:
 - Tratamento das exceções (CEP inválido, CEP não encontrado);
